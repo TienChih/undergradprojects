@@ -17,9 +17,7 @@ Unless one is a student in an introductory linear algebra course, there is littl
 \begin{example}
 Suppose there are 5 boxers, $A,B,C,D, E$.  Boxer $A$ loses to $B$ who then loses to $C$.  Then $E$ fights $B$ to a draw, and $D$ also fights $A$ and wins.  Afterwards $E$ and $B$ have a rematch and $E$ wins:
  
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}
+$$\begin{tikzpicture}
 \node[shape=circle, draw, radius=0.25] (A) at (0,0){$A$};
 \node[shape=circle, draw, radius=0.25] (B) at (2,0){$B$};
 \node[shape=circle, draw, radius=0.25](C) at (4,0){$C$};
@@ -33,11 +31,7 @@ Suppose there are 5 boxers, $A,B,C,D, E$.  Boxer $A$ loses to $B$ who then loses
 \draw[<->, dashed](B) to [bend left] (E);
 \draw[->](B) to [bend right](E);
 
-\end{tikzpicture}
-    \caption{A more complex boxing network}
-    \label{complex}
-
-\end{figure}
+\end{tikzpicture}$$
 
  
  What would be the respective ranking of these boxers? Would $D$ be ranked the same as $C$ as they are both undefeated?  How does $E$ compare to everyone?
@@ -46,8 +40,8 @@ Suppose there are 5 boxers, $A,B,C,D, E$.  Boxer $A$ loses to $B$ who then loses
  
  To evaluate this, using the modified pagerank described \link[here]{https://drive.google.com/open?id=0B9tqGFTzh_9uczlkQkIwb2hqNmc}, we consider the following code:
  
- \begin{sageCell}
- #We first create the raw data matrix
+\begin{sageCell}
+#We first create the raw data matrix
 listsize=5 # This determines the number of boxers being compared
 rawdata=matrix(QQ,listsize,listsize); #This creates a zero square matrix of the appropriate size, the entries of this matrix are allowed to be rational.
 
