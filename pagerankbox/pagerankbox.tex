@@ -146,14 +146,13 @@ for i in range(sizespec):
 #We then list the entries of the appropriate eigenvector in order, mutiplying by 1.0 gives a decimal approximation for easier comparison
         
 for i in range(len(M.eigenvectors_left()[stable][1][0])):
-    M.eigenvectors_left()[best][1][0][i]*1.0
+    M.eigenvectors_left()[stable][1][0][i]*1.0
     
 
 #We then display the digraph based on the normalized data matrix so as to visualize the win/loss relationship between boxers    
 G = DiGraph(normal)
 H = G.plot(color_by_label=True)
-H.show()
- \end{sageCell}
+H.show()\end{sageCell}
 
 
 
