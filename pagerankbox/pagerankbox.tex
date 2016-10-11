@@ -139,7 +139,7 @@ sizespec=len(M.eigenvectors_left())
 stable=0
 
 for i in range(sizespec):
-    if M.eigenvectors_left()[i][0]=1:
+    if M.eigenvectors_left()[i][0]==1:
         stable=i
 
         
@@ -153,7 +153,6 @@ for i in range(len(M.eigenvectors_left()[stable][1][0])):
 G = DiGraph(normal)
 H = G.plot(color_by_label=True)
 H.show()
-
  \end{sageCell}
 
 
