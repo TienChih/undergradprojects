@@ -1,0 +1,181 @@
+\documentclass{ximera}
+      
+\title{Simplex Algorithm in Sage}
+
+
+
+\author{
+  Marchbanks, Emily\      \texttt{emily.marchbanks@newberry.com}
+  \and
+  Stocksdale, Talya\      \texttt{talya.stocksdale@gmail.com}
+}
+      
+\begin{document}
+      
+\begin{abstract}
+Newberry College students Emily Marchbanks {\normalfont(\href{mailto:emily.marchbanks@newberry.com}{{ emily.marchbanks@newberry.com}})  } and Talya Stocksdale {\normalfont(\href{mailto:talya.stocksdale@gmail.com}{ talya.stocksdale@gmail.com})} after learning the theory of linear/affine programming in an independent study course with Dr.\ Tien Chih {\normalfont(\href{mailto:tien.chih@msubillings.edu}{mailto:tien.chih@msubillings.edu})}, wrote an executable application of the Simplex Algorithm in Sage/Python.  The code they wrote is included below as an executable SageCell.
+\end{abstract}
+      
+\maketitle
+
+Enter the Tucker Tableaux form of the desired canonical, primal-max, linear/abstract programming problem as the matrix $A$ in the SageCell.  The upper left portion representing the constraints, the right column the bounds, the bottom row the linear portion of the objective functional, and the bottom right entry the negative of the affine portion of the objective functional.
+
+Running the algorithm with produce all the simplex pivots necessary to either achieve an optimal solution, or show that the problem is infeasible or unbounded.
+
+\begin{example}
+Suppose we wished to maximize $f(x_1, x_2)=x_1+x_2+2$ subject to:
+
+\begin{eqnarray*}
+3x_1+2x_2&\leq&12\\
+2x_1+4x_2&\leq&20\\
+\end{eqnarray*}
+and $x_1, x_2\geq 0$.  We would enter $A$ as:
+
+$$A=\begin{bmatrix} 3&2&12\\ 2&4&20\\1&1&-2\end{bmatrix}$$
+ 
+ \end{example}
+ 
+ 
+\begin{sageCell}
+A=matrix(QQ, [[3,2,12],[2,4,20],[1,1,-2]]); A
+
+
+
+m=A.nrows()       #p
+n=A.ncols()        #q
+isoptimal=0
+isunbounded=0
+XVar=[]
+TVar=[]
+#declaring our variables so we can switch after the pivot
+for i in range(n-1):
+    XVar.append('X'+`i+1`)
+
+for j in range(m-1):
+    TVar.append('T'+`j+1`)
+
+p=-1
+q=-1
+isfeasible=1
+problemfeasible=0
+#Atemp=matrix(QQ, m,n)
+
+
+while (isoptimal==0 and isunbounded==0):
+    isoptimal=1
+    isunbounded=1
+    isfeasible=1
+    problemfeasible=1
+    p=-1
+    q=-1
+
+    #checks to see if current position is feasible 
+    for i in range(m-1):
+        if A[i,n-1]<0 and p<0:
+            p=i
+            isfeasible=0
+            isoptimal=0 #if isfeasible is zero, means point is not feasible, no place for you to stand on graph, so this isn't an optimal point
+            isunbounded=0 #We now don't really care if its unbounded.
+    
+    #Checks to see if problem is feasible
+    if isfeasible==0:  
+        problemfeasible=0
+        for k in range(n-1):
+            if A[p,k]<0 and q<0:
+                q=k
+                problemfeasible=1
+
+
+    if problemfeasible==0:
+        print('The problem has no feasible solutions')
+        p
+        q
+
+    else:
+        #checking last row to see if optimal (step 1), it's optimal when all are negative
+        for i in range(n-1):
+            if A[m-1,i]>0:
+                isoptimal=0
+
+        if isoptimal==1 and isfeasible==1:
+            print('This is optimal, ignore everything after this')
+    
+
+        #finding the right [p,q] to pivot on and will only pivot if point is feasible
+        if isoptimal!=1 and isfeasible==1:
+            q=-1
+            #finding position q to pivot on
+            for i in range(n-1):
+                if A[m-1,i]>0 and q<0:
+                    q=i; q
+            
+            #checking column q to see if all negative (step 4)
+            for k in range(m-1):
+                #A[k,q]
+                if A[k,q]>0:
+                    isunbounded=0
+        
+            if isunbounded==1:
+                print('This is unbounded')
+        
+        
+            p=-1
+            #finding position p to pivot on (step 5)
+            for j in range(m-1):
+                if A[j,q]!=0:
+                    if A[j,n-1]/A[j,q]>=0 and A[j,q]>0:
+                        if p<0:
+                            p=j; p
+                        if p>=0 and A[j,n-1]/A[j,q]<A[p,n-1]/A[p,q]:
+                            p=j; p
+            #printing out the position [p,q] to pivot on and setting declaring a temporary matrix to make for when we pivot
+            print('pivot on position')
+            p
+            q
+        Atemp=matrix(QQ, m,n)
+
+            #the temporary matrix pivots on [p,q] 
+        
+        for i in range(m):
+            for j in range(n):
+                if i==p and j==q:
+                    Atemp[i,j]=1/A[p,q]
+                if i==p and j!=q:
+                    Atemp[i,j]=A[i,j]/A[p,q]
+                if i!=p and j==q:
+                    Atemp[i,j]=-1*A[i,j]/A[p,q]
+                if i!=p and j!=q: 
+                    Atemp[i,j]=(A[i,j]*A[p,q]-A[i,q]*A[p,j])/A[p,q]
+
+            #switches variables according to the pivots, and prints out ones we are switching
+        Xp=XVar[q];Xp
+        Tp=TVar[p];Tp
+
+            #setting new variables to XVar and TVar
+        XVar[q]=Tp
+        TVar[p]=Xp
+            
+        #setting the temporary matrix (that we pivoted on) to be matrix A and printing new tableaux and the new variables after the pivot
+        Atemp
+        A=Atemp
+        XVar
+        TVar
+\end{sageCell}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
